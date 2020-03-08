@@ -1,0 +1,178 @@
+Private Sub CommandButton1_Click()
+'Worksheets("貼上區").Range("A3").CurrentRegion.Select
+
+Dim R, C, PG, BC As Integer
+Dim readR, readC, writeR, writeC, LOC As Integer
+
+'想要轉換的數量、頁數
+R = Worksheets("已除帳印單").Range("A1").CurrentRegion.Rows.Count
+C = Worksheets("已除帳印單").Range("A1").CurrentRegion.Columns.Count
+MsgBox (R)
+MsgBox (C)
+
+PG = 0
+
+
+'讀取位置
+readR = 2
+readC = 1
+
+'一頁八張
+LOC = 1
+
+'寫入位置
+
+writeR = 1
+writeC = 1
+
+Dim sheet As Worksheet
+Set sheet = ActiveWorkbook.Sheets.add(After:=ActiveWorkbook.Worksheets(ActiveWorkbook.Worksheets.Count))
+sheet.Name = "條碼列印"
+
+For all = 1 To R
+    If Worksheets("已除帳印單").Cells(readR, 10).Value = 1 Then
+        PG = PG + 1
+        '第一欄
+        Worksheets("條碼列印").Cells(writeR, writeC).Value = "單號"
+        Worksheets("條碼列印").Cells(writeR + 1, writeC).Value = "備註"
+        Worksheets("條碼列印").Cells(writeR + 2, writeC).Value = "線別"
+        Worksheets("條碼列印").Cells(writeR + 3, writeC).Value = "條碼"
+        
+        '第二欄
+        Worksheets("條碼列印").Cells(writeR, writeC + 1).Value = Worksheets("已除帳印單").Cells(readR, 3).Value
+
+        Worksheets("條碼列印").Cells(writeR + 1, writeC + 1).Value = Worksheets("已除帳印單").Cells(readR, 7).Value
+        Worksheets("條碼列印").Cells(writeR + 1, writeC + 1).WrapText = True
+        
+        Worksheets("條碼列印").Cells(writeR + 2, writeC + 1).Value = Worksheets("已除帳印單").Cells(readR, 1).Value
+        Worksheets("條碼列印").Cells(writeR + 2, writeC + 1).WrapText = True
+        
+        Worksheets("條碼列印").Cells(writeR + 3, writeC + 1).Font.Name = "Code39 Giant"
+        Worksheets("條碼列印").Cells(writeR + 3, writeC + 1).Formula = "=""*""&" & Worksheets("條碼列印").Cells(writeR, writeC + 1).Address(False, False) & "&""*"""
+        
+        
+        '第三闌
+        
+        Worksheets("條碼列印").Cells(writeR, writeC + 2).Value = Worksheets("已除帳印單").Cells(readR, 4).Value
+        Worksheets("條碼列印").Cells(writeR, writeC + 2).Font.Size = 12
+        Worksheets("條碼列印").Cells(writeR, writeC + 2).ClearFormats
+        Worksheets("條碼列印").Cells(writeR, writeC + 2).Value = Format(Worksheets("條碼列印").Cells(writeR, writeC + 2).Value, "mm/dd")
+        Worksheets("條碼列印").Cells(writeR, writeC + 2).NumberFormatLocal = "m/d;@"
+        Worksheets("條碼列印").Cells(writeR, writeC + 2).HorizontalAlignment = xlLeft
+       
+        Worksheets("條碼列印").Cells(writeR + 1, writeC + 2).Value = "數量"
+        Worksheets("條碼列印").Cells(writeR + 2, writeC + 2).Value = Worksheets("已除帳印單").Cells(readR, 8).Value
+       
+
+        'Worksheets("條碼列印").Cells(writeR + 2, writeC + 2).HorizontalAlignment = xlLeft
+        
+        
+        If LOC <> 8 Then
+            If LOC Mod 2 = 1 Then
+                writeC = writeC + 3
+                LOC = LOC + 1
+            
+            Else
+                writeR = writeR + 5
+                writeC = writeC - 3
+                LOC = LOC + 1
+            End If
+            
+        
+        Else
+            writeC = writeC + 3
+            writeR = writeR - 15
+            LOC = 1
+            
+        End If
+        readR = readR + 1
+
+    Else
+    readR = readR + 1
+    
+    End If
+
+
+Next all
+
+
+PG = Application.WorksheetFunction.RoundUp(PG / 8, 0)
+
+
+'調整格式
+
+Dim adR, adC As Integer
+adR = 1
+adC = 1
+
+
+Worksheets("條碼列印").Rows(adR).RowHeight = 38.25
+Worksheets("條碼列印").Rows(adR + 1).RowHeight = 36.75
+Worksheets("條碼列印").Rows(adR + 2).RowHeight = 36.75
+Worksheets("條碼列印").Rows(adR + 3).RowHeight = 48.75
+Worksheets("條碼列印").Rows(adR + 4).RowHeight = 22.5
+adR = adR + 5
+
+
+Worksheets("條碼列印").Rows(adR).RowHeight = 45
+Worksheets("條碼列印").Rows(adR + 1).RowHeight = 36.75
+Worksheets("條碼列印").Rows(adR + 2).RowHeight = 36.75
+Worksheets("條碼列印").Rows(adR + 3).RowHeight = 48.75
+Worksheets("條碼列印").Rows(adR + 4).RowHeight = 22.5
+adR = adR + 5
+
+Worksheets("條碼列印").Rows(adR).RowHeight = 45
+Worksheets("條碼列印").Rows(adR + 1).RowHeight = 36.75
+Worksheets("條碼列印").Rows(adR + 2).RowHeight = 36.75
+Worksheets("條碼列印").Rows(adR + 3).RowHeight = 48.75
+Worksheets("條碼列印").Rows(adR + 4).RowHeight = 22.5
+adR = adR + 5
+
+Worksheets("條碼列印").Rows(adR).RowHeight = 45
+Worksheets("條碼列印").Rows(adR + 1).RowHeight = 36.75
+Worksheets("條碼列印").Rows(adR + 2).RowHeight = 36.75
+Worksheets("條碼列印").Rows(adR + 3).RowHeight = 48.75
+
+
+
+For adcolumn = 1 To PG:
+
+Worksheets("條碼列印").Columns(adC).ColumnWidth = 7.43
+Worksheets("條碼列印").Columns(adC + 1).ColumnWidth = 28.43
+Worksheets("條碼列印").Columns(adC + 2).ColumnWidth = 7
+Worksheets("條碼列印").Columns(adC + 3).ColumnWidth = 6.14
+Worksheets("條碼列印").Columns(adC + 4).ColumnWidth = 28.43
+Worksheets("條碼列印").Columns(adC + 5).ColumnWidth = 7.43
+adC = adC + 6
+
+Next adcolumn
+
+Dim borderR, borderC As Integer
+borderR = 1
+borderC = 1
+
+For iter = 1 To PG
+
+    For inpg2 = 1 To 4
+    
+        For inpg = 1 To 2
+        Worksheets("條碼列印").Range(Worksheets("條碼列印").Cells(borderR, borderC), Worksheets("條碼列印").Cells(borderR + 3, borderC + 2)).Borders.LineStyle = xlContinuous
+        
+        Worksheets("條碼列印").Range(Worksheets("條碼列印").Cells(borderR, borderC), Worksheets("條碼列印").Cells(borderR + 3, borderC + 2)).Borders.Weight = xlThick
+        
+        Worksheets("條碼列印").Range(Worksheets("條碼列印").Cells(borderR, borderC), Worksheets("條碼列印").Cells(borderR + 3, borderC + 2)).Font.Size = 16
+        
+        Worksheets("條碼列印").Cells(borderR + 1, borderC + 1).Font.Size = 14
+        
+        Worksheets("條碼列印").Cells(borderR + 2, borderC + 1).Font.Size = 19
+        borderC = borderC + 3
+        Next inpg
+    
+    borderR = borderR + 5
+    borderC = borderC - 6
+    Next inpg2
+borderR = 1
+borderC = borderC + 6
+Next iter
+
+End Sub
